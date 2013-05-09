@@ -56,7 +56,7 @@ def test_href_translation():
   def fake_link(version):
     return 'http://www.example.com/foo/bar/psutil-%s.tar.gz' % version
   fc = FakeCrawler(map(fake_link, VERSIONS))
-  ob = Obtainer(fc, [], [])
+  ob = Obtainer(None, None, fc, [], [])
 
   for v in VERSIONS:
     pkgs = list(ob.iter(Requirement.parse('psutil==%s' % v)))

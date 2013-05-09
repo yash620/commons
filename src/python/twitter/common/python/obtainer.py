@@ -1,6 +1,9 @@
+from __future__ import print_function
+
 import itertools
 
 from .http import EggLink, SourceLink
+from .platforms import Platform
 from .tracer import TRACER
 from .translator import ChainedTranslator
 
@@ -25,9 +28,11 @@ class Obtainer(object):
     ...                                   'pygments', 'pylint', 'pytest'])
     >>> for d in distributions: d.activate()
   """
-  def __init__(self, crawler, fetchers, translators):
+  def __init__(self, python, platform, crawler, fetchers, translators):
+    self._python = python
     self._crawler = crawler
     self._fetchers = fetchers
+    self._platform = platform
     # use maybe_list?
     if isinstance(translators, (list, tuple)):
       self._translator = ChainedTranslator(*translators)
@@ -48,8 +53,10 @@ class Obtainer(object):
   def iter_unordered(self, req):
     urls = list(itertools.chain(*[fetcher.urls(req) for fetcher in self._fetchers]))
     for link in filter(None, map(self.translate_href, self._crawler.crawl(*urls))):
-      if link.satisfies(req):
-        yield link
+      if Platform.version_compatible(link.py_version or Platform.python(), self._python):
+        if Platform.compatible(link.platform or Platform.current(), self._platform):
+          if link.satisfies(req):
+            yield link
 
   def iter(self, req):
     """Given a req, return a list of links that satisfy the requirement in best match order."""
@@ -58,7 +65,10 @@ class Obtainer(object):
 
   def obtain(self, req):
     with TRACER.timed('Obtaining %s' % req):
-      for link in self.iter(req):
+      links = list(self.iter(req))
+      TRACER.log('Got ordered links:\n\t%s' % '\n\t'.join(map(str, links)), V=2)
+      for link in links:
         dist = self._translator.translate(link)
         if dist:
+          TRACER.log('Picked %s -> %s' % (link, dist), V=2)
           return dist

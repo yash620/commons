@@ -35,9 +35,9 @@ class Resolver(WorkingSet):
     super(Resolver, self).__init__(entries=[])
 
   def make_installer(self, python, platform):
-    obtainer = Obtainer(self._crawler, self._fetchers,
-        Translator.default(self._install_cache, python=python, platform=platform,
-          conn_timeout=self._conn_timeout))
+    translator = Translator.default(self._install_cache, python=python, platform=platform,
+                                    conn_timeout=self._conn_timeout)
+    obtainer = Obtainer(python, platform, self._crawler, self._fetchers, translator)
     return obtainer.obtain
 
   def resolve(self, requirements, python=Platform.python(), platform=Platform.current()):
