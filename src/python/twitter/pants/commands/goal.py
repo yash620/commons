@@ -14,7 +14,7 @@
 # limitations under the License.
 # ==================================================================================================
 
-import daemon
+from __future__ import print_function
 
 import errno
 import inspect
@@ -410,7 +410,7 @@ class Goal(Command):
     update_reporting(self.options, is_console_task(), self.run_tracker)
 
     if self.options.dry_run:
-      print '****** Dry Run ******'
+      print('****** Dry Run ******')
 
     context = Context(
       self.config,
@@ -616,7 +616,7 @@ class RunServer(Task):
           server = ReportingServer(port, settings)
           # Block forever here.
           server.start(run_before_blocking=[write_pidfile, report_launch, done_reporting])
-      except socket.error, e:
+      except socket.error as e:
         if e.errno == errno.EADDRINUSE:
           reporting_queue.put('Server already running at http://localhost:%d' % port)
           show_latest_run_msg()

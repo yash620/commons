@@ -1,5 +1,7 @@
 from collections import namedtuple
 
+from twitter.common.lang import Compatibility
+
 from twitter.pants.goal.workunit import WorkUnit
 from twitter.pants.reporting.report import Report
 from twitter.pants.reporting.reporter import Reporter
@@ -87,7 +89,7 @@ class PlainTextReporter(Reporter):
     """Implementation of Reporter callback."""
     # If the element is a (msg, detail) pair, we ignore the detail. There's no
     # useful way to display it on the console.
-    elements = [e if isinstance(e, basestring) else e[0] for e in msg_elements]
+    elements = [e if isinstance(e, Compatibility.string) else e[0] for e in msg_elements]
     msg = '\n' + ''.join(elements)
     if self.settings.color:
       msg = _colorfunc_map.get(level, lambda x: x)(msg)

@@ -16,6 +16,8 @@
 
 __author__ = 'Brian Wickman'
 
+import sys
+
 from sys import version_info as sys_version_info
 from numbers import Integral, Real
 from .lockable import Lockable
@@ -110,6 +112,8 @@ class Compatibility(object):
   string = (str,) if PY3 else (str, unicode)
   bytes = (bytes,)
 
+  maxint = sys.maxint if PY2 else sys.maxsize
+
   if PY2:
     @staticmethod
     def to_bytes(st):
@@ -166,7 +170,7 @@ class InheritDocstringsMetaclass(type):
 
   """
   def __new__(self, class_name, bases, namespace):
-    for key, value in namespace.iteritems():
+    for key, value in namespace.items():
       if callable(value) and not value.__doc__:
         for parent in bases:
           if hasattr(parent, key) and getattr(parent, key).__doc__:

@@ -7,12 +7,19 @@ from collections import namedtuple
 from pystache.renderer import Renderer
 
 from twitter.common.dirutil import safe_mkdir
+from twitter.common.lang import Compatibility
+
 from twitter.pants import get_buildroot
 from twitter.pants.base.mustache import MustacheRenderer
 from twitter.pants.goal.workunit import WorkUnit
 from twitter.pants.reporting.linkify import linkify
 from twitter.pants.reporting.reporter import Reporter
 from twitter.pants.reporting.reporting_utils import items_to_report_element
+
+if Compatibility.PY3:
+  from itertools import zip_longest as izip_longest
+else:
+  from itertools import izip_longest
 
 
 class HtmlReporter(Reporter):
@@ -138,7 +145,7 @@ class HtmlReporter(Reporter):
     # Update the artifact cache stats.
     def render_cache_stats(artifact_cache_stats):
       def fix_detail_id(e, _id):
-        return e if isinstance(e, basestring) else e + (_id, )
+        return e if isinstance(e, Compatibility.string) else e + (_id, )
 
       msg_elements = []
       for cache_name, stat in artifact_cache_stats.stats_per_cache.items():
@@ -204,12 +211,12 @@ class HtmlReporter(Reporter):
       # preserved through refreshes. For example, when looking at the artifact cache stats,
       # if "hits" are open and "misses" are closed, we want to remember that even after
       # the cache stats are updated and the message re-rendered.
-      if isinstance(element, basestring):
+      if isinstance(element, Compatibility.string):
         element = [element]
       defaults = ('', None, None, False)
       # Map assumes None for missing values, so this will pick the default for those.
-      (text, detail, detail_id, detail_initially_visible) = \
-        map(lambda x, y: x or y, element, defaults)
+      (text, detail, detail_id, detail_initially_visible) = map(lambda xy: xy[0] or xy[1],
+                                                                izip_longest(element, defaults))
       element_args = {'text': self._htmlify_text(text) }
       if detail is not None:
         detail_id = detail_id or uuid.uuid4()

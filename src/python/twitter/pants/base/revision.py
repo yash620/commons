@@ -16,7 +16,12 @@
 
 import re
 
-from itertools import izip_longest
+from twitter.common.lang import Compatibility
+
+if Compatibility.PY3:
+  from itertools import zip_longest as izip_longest
+else:
+  from itertools import izip_longest
 
 
 class Revision(object):

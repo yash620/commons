@@ -18,10 +18,17 @@ PANTS_SOURCES   = rglobs('*.py')
 PANTS_GARBAGE   = rglobs('*.pyc') + rglobs('*~')
 PANTS_RESOURCES = rglobs('*') - PANTS_SOURCES - PANTS_GARBAGE
 
+from twitter.common.lang import Compatibility
+
 # Only build pylint on py 2.x
 def pylint_build_filter():
-  import sys
-  return sys.version_info[0] == 2
+  return Compatibility.PY2
+
+def python_daemon():
+  if Compatibility.PY3:
+    return python_requirement('python-daemon-3k')
+  else:
+    return python_requirement('python-daemon')
 
 python_library(
   name = 'pants-deps',
@@ -34,7 +41,7 @@ python_library(
     python_requirement('pystache'),
     python_requirement('pytest'),
     python_requirement('pytest-cov'),
-    python_requirement('python_daemon'),
+    python_daemon(),
   ]
 )
 

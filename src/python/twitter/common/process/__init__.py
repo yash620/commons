@@ -3,8 +3,8 @@ __author__ = 'Brian Wickman'
 import atexit
 import os
 import sys
-from process_provider_ps import ProcessProvider_PS
-from process_provider_procfs import ProcessProvider_Procfs
+from .process_provider_ps import ProcessProvider_PS
+from .process_provider_procfs import ProcessProvider_Procfs
 
 from twitter.common.dirutil import lock_file
 

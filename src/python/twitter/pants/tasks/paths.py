@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 __author__ = 'ryan'
 
 from twitter.common.lang import Compatibility
@@ -55,7 +57,7 @@ class PathFinder(Task):
     while True:
       if not queue:
         if not paths_found:
-          print 'no path found from %s to %s!' % (from_target.address.reference(), to_target.address.reference())
+          print('no path found from %s to %s!' % (from_target.address.reference(), to_target.address.reference()))
         break
 
       path, indent = queue.pop(0)
@@ -64,11 +66,11 @@ class PathFinder(Task):
 
       if next_target == to_target:
         if paths_found:
-          print ''
+          print('')
         else:
           paths_found = True
         for target in path:
-          print '%s' % target.address.reference()
+          print('%s' % target.address.reference())
         if find_all:
           continue
         else:

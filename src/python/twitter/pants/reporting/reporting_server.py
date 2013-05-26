@@ -5,19 +5,25 @@ import os
 import pystache
 import re
 import sys
-import urllib
-import urlparse
-
-import BaseHTTPServer
 
 from collections import namedtuple
 from datetime import date, datetime
 
 from pystache import Renderer
 
+from twitter.common.lang import Compatibility
+
 from twitter.pants.base.mustache import MustacheRenderer
 from twitter.pants.goal.run_tracker import RunInfo
 
+if Compatibility.PY3:
+  import urllib.parse as urlparse
+  from urllib.parse import urlencode
+  import http.server as BaseHTTPServer
+else:
+  from urllib import urlencode
+  import urlparse
+  import BaseHTTPServer
 
 # Google Prettyprint plugin files.
 PPP_RE=re.compile("""^lang-.*\.js$""")

@@ -44,7 +44,7 @@ fi
 DEFAULT_PYTHON=$(ls $MY_DIR/.python | egrep -v '^(bin|bootstrap)$' | head -1)
 if [ -z "$DEFAULT_PYTHON" ]; then
   echo No python interpreters found\!  Bootstrapping...
-  $MY_DIR/.python/bootstrap/pants.pex goal setup -vx -ldebug --no-pantsrc
+  $MY_DIR/.python/bootstrap/pants.pex goal setup -x -ldebug --no-pantsrc
 fi
 
 DEFAULT_PYTHON=$(ls $MY_DIR/.python | egrep -v '^(bin|bootstrap)$' | head -1)

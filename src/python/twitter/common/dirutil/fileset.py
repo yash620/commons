@@ -21,6 +21,9 @@ import re
 
 from twitter.common.lang import Compatibility
 
+if Compatibility.PY3:
+  from functools import reduce
+
 
 def fnmatch_translate_extended(pat):
   """

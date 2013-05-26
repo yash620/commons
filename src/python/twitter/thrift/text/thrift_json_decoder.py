@@ -72,7 +72,7 @@ class ThriftJSONDecoder(json.JSONDecoder):
     elif ttype == TType.BOOL:
       ret = not not val
     else:
-      raise Exception, 'Unrecognized thrift field type: %d' % ttype
+      raise Exception('Unrecognized thrift field type: %d' % ttype)
     return ret
 
 def json_to_thrift(json_str, root_thrift_class):

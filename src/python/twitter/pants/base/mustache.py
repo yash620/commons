@@ -1,4 +1,9 @@
-import urlparse
+from twitter.common.lang import Compatibility
+
+if Compatibility.PY3:
+  import urllib.parse as urlparse
+else:
+  import urlparse
 
 
 class MustacheRenderer(object):
@@ -55,7 +60,7 @@ class MustacheRenderer(object):
     # Parse the inner args as CGI args.
     inner_args = dict([(k, v[0]) for k, v in urlparse.parse_qs(rendered_arg_string).items()])
     # Order matters: lets the inner args override the outer args.
-    args = dict(outer_args.items() + inner_args.items())
+    args = dict(list(outer_args.items()) + list(inner_args.items()))
     # Render.
     return self.render_name(inner_template_name, args)
 

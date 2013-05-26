@@ -13,11 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==================================================================================================
-import os
+
+from __future__ import print_function
 
 __author__ = 'Benjy Weinberger'
 
 import difflib
+import os
 import re
 
 from collections import defaultdict
@@ -131,4 +133,4 @@ class BuildLint(Task):
         if 'diff' in self.actions:
           diff = '\n'.join(difflib.unified_diff(old_buildfile_source.split('\n'),
             new_buildfile_source.split('\n'), buildfile_path))
-          print diff
+          print(diff)

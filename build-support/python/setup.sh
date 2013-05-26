@@ -29,21 +29,24 @@ fi
 
 PYTHON=$BOOTSTRAP_BIN/bootstrap
 
+VIRTUALENV=virtualenv-1.9.1
+VIRTUALENV_DIST=${VIRTUALENV}.tar.gz
+
 pushd $CACHE >& /dev/null
-  if ! test -f virtualenv-1.7.1.2.tar.gz; then
+  if ! test -f $VIRTUALENV_DIST; then
     echo 'Installing virtualenv' 1>&2
     for url in \
-      http://pypi.python.org/packages/source/v/virtualenv/virtualenv-1.7.1.2.tar.gz \
-      https://svn.twitter.biz/science-binaries/home/third_party/python/virtualenv-1.7.1.2.tar.gz; do
+      https://pypi.python.org/packages/source/v/virtualenv/$VIRTUALENV_DIST \
+      https://svn.twitter.biz/science-binaries/home/third_party/python/$VIRTUALENV_DIST; do
       if curl --connect-timeout 10 -O $url; then
         break
       fi
     done
   fi
-  gzip -cd virtualenv-1.7.1.2.tar.gz | tar -xf - >& /dev/null
+  gzip -cd $VIRTUALENV_DIST | tar -xf - >& /dev/null
 popd >& /dev/null
 
-if $PYTHON $CACHE/virtualenv-1.7.1.2/virtualenv.py -p $PY --distribute $BOOTSTRAP_ENVIRONMENT; then
+if $PYTHON $CACHE/$VIRTUALENV/virtualenv.py -p $PY --distribute $BOOTSTRAP_ENVIRONMENT; then
   source $BOOTSTRAP_ENVIRONMENT/bin/activate
   for pkg in distribute pystache; do
     pip install \

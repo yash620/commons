@@ -14,15 +14,20 @@
 # limitations under the License.
 # ==================================================================================================
 
-import httplib
 import os
 import shutil
-import urlparse
 
 from twitter.common.quantity import Amount, Data
 from twitter.common.contextutil import open_tar, temporary_file, temporary_file_path
 from twitter.common.dirutil import safe_mkdir, safe_rmtree
 from twitter.common.lang import Compatibility
+
+if Compatibility.PY3:
+  from http.client import HTTPConnection, HTTPSConnection
+  import urllib.parse as urlparse
+else:
+  from httplib import HTTPConnection, HTTPSConnection
+  import urlparse
 
 # Note throughout the distinction between the artifact_root (which is where the artifacts are
 # originally built and where the cache restores them to) and the cache root path/URL (which is
@@ -257,7 +262,7 @@ class RESTfulArtifactCache(ArtifactCache):
         with open_tar(outfile.name, mode) as tarfile:
           tarfile.extractall(self.artifact_root)
       return True
-    except Exception, e:
+    except Exception as e:
       if self.context:
         self.context.log.warn('Error while reading from artifact cache: %s' % e)
         return False

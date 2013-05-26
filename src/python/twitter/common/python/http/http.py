@@ -16,7 +16,7 @@ if Compatibility.PY3:
   import urllib.request as urllib_request
   from urllib.request import addinfourl
 else:
-  from httplib import HTTPMessage
+  from httplib import HTTPMessage as parse_headers
   from urllib import addinfourl
   import urllib2 as urllib_request
   import urllib2 as urllib_error
@@ -132,7 +132,7 @@ class CachedWeb(object):
     return self.age(url) > 0
 
   def translate_url(self, url):
-    return os.path.join(self._cache, hashlib.md5(url).hexdigest())
+    return os.path.join(self._cache, hashlib.md5(url.encode('utf8')).hexdigest())
 
   def translate_all(self, url):
     return ('%(tgt)s %(tgt)s.tmp %(tgt)s.headers %(tgt)s.headers.tmp' % {
@@ -178,7 +178,7 @@ class CachedWeb(object):
     headers_fp = open(headers)
     code, = struct.unpack('>h', headers_fp.read(2))
     def make_headers(fp):
-      return HTTPMessage(fp) if Compatibility.PY2 else parse_headers(fp)
+      return parse_headers(fp)
     return addinfourl(open(target), make_headers(headers_fp), url, code)
 
   def clear_url(self, url):

@@ -14,6 +14,8 @@
 # limitations under the License.
 # ==================================================================================================
 
+from __future__ import print_function
+
 __author__ = 'Mark C. Chu-Carroll'
 
 from collections import defaultdict
@@ -125,7 +127,7 @@ class ZincAnalysisCollection(object):
     try:
       zincfile = open(zincfile, 'r')
     except IOError:
-      print 'Warning: analysis file %s not found' % analysis_file
+      print('Warning: analysis file %s not found' % analysis_file)
       return
     mode = None
 
@@ -151,9 +153,8 @@ class ZincAnalysisCollection(object):
         src = src.strip()
         dep = dep.strip()
         if sep == '' and line != '\n':
-            print ('Syntax error: line is neither a modeline nor a dep. "%s"'  %
-                    line)
-            continue
+          print('Syntax error: line is neither a modeline nor a dep. "%s"' % line)
+          continue
         if mode == 'products':
           self.products[src].add(dep)
           cl = self._classfile_to_classname(dep, classes_dir)
@@ -171,7 +172,8 @@ class ZincAnalysisCollection(object):
         elif mode == 'class':
           self.class_names[src].add(dep)
         else:
-          print 'Unprocessed line, mode = %s' % mode
+          print('Unprocessed line, mode = %s' % mode)
+
       if mode == 'done':
         return
 

@@ -682,7 +682,7 @@ class JarPublish(Task):
             self.commit_push(jar.org, jar.name, newver.version(), head_sha)
 
   def check_targets(self, targets):
-    invalid = filter(lambda (t, reason): reason, zip(targets, map(self.is_invalid, targets)))
+    invalid = filter(lambda tgt_reason: tgt_reason[1], zip(targets, map(self.is_invalid, targets)))
     if invalid:
       target_reasons = '\n\t'.join('%s: %s' % (tgt.address, reason) for tgt, reason in invalid)
       params = dict(

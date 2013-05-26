@@ -22,6 +22,7 @@ from contextlib import contextmanager
 from multiprocessing.pool import ThreadPool
 
 from twitter.common.collections.orderedset import OrderedSet
+from twitter.common.lang import Compatibility
 
 from twitter.pants.base.artifact_cache import create_artifact_cache
 from twitter.pants.base.hash_utils import hash_file
@@ -108,7 +109,7 @@ class Task(object):
 
   @contextmanager
   def invalidated(self, targets, only_buildfiles=False, invalidate_dependents=False,
-                  partition_size_hint=sys.maxint):
+                  partition_size_hint=Compatibility.maxint):
     """Checks targets for invalidation. Subclasses call this to figure out what to work on.
 
     targets:               The targets to check for changes.
@@ -138,7 +139,7 @@ class Task(object):
                                             targets,
                                             only_buildfiles=False,
                                             invalidate_dependents=False,
-                                            partition_size_hint=sys.maxint):
+                                            partition_size_hint=Compatibility.maxint):
     """Checks targets for invalidation, first checking the artifact cache.
     Subclasses call this to figure out what to work on.
 

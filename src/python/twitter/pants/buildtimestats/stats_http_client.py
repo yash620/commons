@@ -19,12 +19,10 @@ from __future__ import print_function
 
 __author__ = 'Tejal Desai'
 
-import httplib
 import json
 import os
 import socket
 import sys
-import urllib
 import time
 
 from twitter.common import dirutil, log
@@ -34,6 +32,19 @@ from twitter.common.dirutil.fileset import Fileset
 from twitter.common.quantity import Amount, Time
 from twitter.common.quantity.parse_simple import parse_time, InvalidTime
 from twitter.common.util.command_util import CommandUtil
+
+from twitter.common.lang import Compatibility
+from twitter.common.quantity import Amount, Time
+
+from twitter.common.lang import Compatibility
+from twitter.common.quantity import Amount, Time
+
+if Compatibility.PY3:
+  from http.client import HTTPConnection, HTTPException
+  from urllib.parse import urlencode
+else:
+  from httplib import HTTPConnection, HTTPException
+  from urllib import urlencode
 
 
 MAX_RECORDS = 100
@@ -55,13 +66,13 @@ class StatsHttpClient(object):
 
   def _get_client(self):
     if self._client is None:
-      self._client = httplib.HTTPConnection(self._host, self._port, timeout=2)
+      self._client = HTTPConnection(self._host, self._port, timeout=2)
     return self._client
 
   def push_stats(self, json_stats):
     log.debug("Uploading pants stats to %s" % self._host)
     client = self._get_client()
-    params = urllib.urlencode({"json": json_stats})
+    params = urlencode({"json": json_stats})
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
     client.request("POST", self._http_endpoint, params, headers)
     resp = client.getresponse()
@@ -79,7 +90,7 @@ class StatsHttpClient(object):
           tmp_str.strip(',')
           self.push_stats("[" + tmp_str + "]")
         os.remove(os.path.join(self._stats_dir, filename))
-      except httplib.HTTPException as e:
+      except HTTPException as e:
         log.debug("HTTPException %s" % e)
       except OSError as e:
         log.debug("Error reading or deleting a stats file %s" % e)

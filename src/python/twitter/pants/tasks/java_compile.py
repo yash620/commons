@@ -56,7 +56,7 @@ _JMAKE_ERROR_CODES = {
   -30: 'internal Java error (caused by java.lang.RuntimeException).'
 }
 # When executed via a subprocess return codes will be treated as unsigned
-_JMAKE_ERROR_CODES.update((256+code, msg) for code, msg in _JMAKE_ERROR_CODES.items())
+_JMAKE_ERROR_CODES.update((256+code, msg) for code, msg in list(_JMAKE_ERROR_CODES.items()))
 
 
 def _is_java(target):
