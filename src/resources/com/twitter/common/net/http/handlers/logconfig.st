@@ -17,30 +17,40 @@ limitations under the License.
 -->
 
 <html>
-  <title>Logger Config</title>
-  <body>
-    <form action='' method='post'>
-      <select name='logger'>
-        $loggers:{<option value='$it.name$'>$it.name$}$
-      </select>
-      <select name='level'>
-        $levels:{<option value='$it$'>$it$}$
-      </select>
-      <input type='submit' value='Go'>
-    </form>
-
-    $if(configChange)$
-      <br />
-      <i>$configChange$</i>
-      <br />
-    $endif$
-
-    <table border=1 cellpadding=0 cellspacing=0 align=left>
-      <tr>
-        <th>Logger</th>
-        <th>Level</th>
-      </tr>
-      $loggers:{<tr><td>$it.name$</td><td>$it.level$</td></tr>}$
-    </table>
-  </body>
+	<title>Logger Config </title>
+ 	<body>
+ 	 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+   <table border=1 cellpadding=0 cellspacing=0 align=left>
+	   <tr>
+	    <th>Logger</th>
+     <th>Level</th>
+    </tr>
+    $loggers:{ logger |    
+	    <tr>
+	     <td>
+	      $logger.name$
+      </td>
+      <td>
+	      <select id = "$logger.name$" name='level'  class = 'selectlevels' data-loglevel = "$logger.level$">
+	      	$levels:{ level |
+									<option value='$level$'>$level$</option>	
+								}$
+			    </select>	
+	     </td>
+     </tr>
+    }$
+   </table>
+			<script>
+				\$(document).ready(function(){
+	 			\$('.selectlevels').each(function() {
+						\$(this).val(\$(this).data('loglevel'));
+					});
+					\$('.selectlevels').change(function(){ 
+		  		\$.post("/logconfig" ,{ logger : \$(this).attr('id'), level : \$(this).val()})
+						location.reload();
+					});	
+				});
+		</script>
+ </body>
 </html>
+
